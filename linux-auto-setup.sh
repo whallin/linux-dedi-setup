@@ -2,7 +2,7 @@
 
 # Placeholders
 ## Only edit the placeholders in case you know what you're doing.
-version=1.1
+version=1.0.2
 username="YOUR NAME"
 osName="$(. /etc/os-release && echo "$ID")"
 osVersion="$(. /etc/os-release && echo "$VERSION_ID")"
@@ -251,7 +251,7 @@ whitelistTCPShield(){
     read selectTCPShield
     case $selectTCPShield in
         1 ) userSelectedYes
-            curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistTCPShield.sh | bash
+            bash <(curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistTCPShield.sh)
             ;;
         2 ) userSelectedNo
             ;;
@@ -273,7 +273,7 @@ whitelistWISP(){
     read selectWISP
     case $selectWISP in
         1 ) userSelectedYes
-            curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistWISP.sh | bash
+            bash <(curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistWISP.sh)
             ;;
         2 ) userSelectedNo
             ;;
