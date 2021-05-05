@@ -89,11 +89,10 @@ if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "fedora" ]; 
     # Download the list of TCPShield IPs (IPv4)
     wget https://tcpshield.com/v4
     # Create the firewall rules
-    for ips in 'cat v4';
+    for ips in `cat v4`;
     do
         for port in "${ports[@]}";
         do
-            ufw allow from $ips to any proto tcp port $port
             firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address='"$ips"' port port='"$port"' protocol="tcp" accept'
         done
     done
@@ -105,7 +104,7 @@ elif [ $osName == "debian" ] || [ $osName == "ubuntu" ]; then
     # Download the list of TCPShield IPs (IPv4)
     wget https://tcpshield.com/v4
     # Create the firewall rules
-    for ips in 'cat v4';
+    for ips in `cat v4`;
     do
         for port in "${ports[@]}";
         do
