@@ -87,9 +87,9 @@ if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "fedora" ]; 
     # Allow connections via the default ssh port (22)
     firewall-cmd --add-service=ssh
     # Download the list of WISP IPs (IPv4)
-    wget https://raw.githubusercontent.com/whallin/linux-setup/master/wisp-v4.txt
+    wget https://cdn.williamhallin.com/wisp-v4
     # Create the firewall rules
-    for ips in `cat wisp-v4.txt`;
+    for ips in `cat wisp-v4`;
     do
         for port in "${ports[@]}";
         do
@@ -110,9 +110,9 @@ elif [ $osName == "debian" ] || [ $osName == "ubuntu" ]; then
     # Allow connections via the default ssh port (22)
     ufw allow 22
     # Download the list of WISP IPs (IPv4)
-    wget https://raw.githubusercontent.com/whallin/linux-setup/master/wisp-v4.txt
+    wget https://cdn.williamhallin.com/wisp-v4
     # Create the firewall rules
-    for ips in `cat wisp-v4.txt`;
+    for ips in `cat wisp-v4`;
     do
         for port in "${ports[@]}";
         do
