@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 # Placeholders
 ## Only edit the placeholders in case you know what you're doing.
