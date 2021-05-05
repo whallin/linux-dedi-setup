@@ -6,8 +6,11 @@ version=1.0
 osName="$(. /etc/os-release && echo "$ID")"
 osVersion="$(. /etc/os-release && echo "$VERSION_ID")"
 
+# Enable alias support
+shopt -s expand_aliases
+
 # Phrases
-scriptTerminated="$(error "Script terminated...")"
+alias scriptTerminated='error "Script terminated..."'
 
 # Colors
 ## "heading" is yellow.
@@ -37,7 +40,7 @@ preCheck(){
     # Check if script was run as root
     if [ "$EUID" -ne 0 ] then
         error "You have to run this script with root privileges."
-        ${scriptTerminated}
+        scriptTerminated
         exit 126
     fi
 
@@ -48,15 +51,15 @@ preCheck(){
         echo ""
     else
         error "/etc/os-release not found on system."
-        ${scriptTerminated}
+        scriptTerminated
         exit 2
     fi
 
     # Terminate script if user isn't running a supported distro
-    if [ $osName != "debian", "ubuntu", "rhel", "centos", "fedora" ]; then
+    if [ $osName == "debian" ] && [ $osName == "ubuntu" ] && [ $osName == "rhel" ] && [ $osName == "centos" ] && [ $osName == "cloudlinux" ] && [ $osName == "fedora" ]; then
         error "You are running an unsupported distribution."
         paragraph "Check the GitHub page for a list of supported distributions."
-        ${scriptTerminated}
+        scriptTerminated
         exit 126
     fi
 }
@@ -79,7 +82,7 @@ paragraph "25565 25566 25567 25568 25569 25570"
 getPorts
 
 # Install firewall and apply rules
-if [ $osName == "rhel", "centos", "fedora" ]; then
+if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "fedora" ]; then
     yum -y install firewalld wget
     # Allow connections via the default ssh port (22)
     firewall-cmd --add-service=ssh
@@ -95,7 +98,7 @@ if [ $osName == "rhel", "centos", "fedora" ]; then
         done
     done
     firewall-cmd --reload
-elif [ $osName == "debian", "ubuntu" ]; then
+elif [ $osName == "debian" ] || [ $osName == "ubuntu" ]; then
     apt -y install ufw wget
     # Allow connections via the default ssh port (22)
     ufw allow 22
