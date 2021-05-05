@@ -2,18 +2,32 @@
 
 # Placeholders
 ## Only edit the placeholders in case you know what you're doing.
-version=1.0
-username="w_hallin"
+version=1.1
+username="YOUR NAME"
 osName="$(. /etc/os-release && echo "$ID")"
 osVersion="$(. /etc/os-release && echo "$VERSION_ID")"
+#
+# Comment from <me@williamhallin.com>:
+# I've added these placeholders here if someone ever wants to
+# rework the check statements to see if the system has
+# compatability with this script or not. It's pretty much only
+# there to be if someone want's to minify things later down the
+# line.
+#
+#supportedOS=("debian" "ubuntu" "rhel" "centos" "cloudlinux" "fedora")
+#supportedRHEL=("rhel" "centos" "cloudlinux" "fedora")
+#supportedDebian=("debian" "ubuntu")
+
+# Enable alias support
+shopt -s expand_aliases
 
 # Phrases
-scriptTerminated="$(error "Script terminated...")"
-yesQuestion="$(heading "[1] Yes")"
-skipQuestion="$(heading "[2] No")"
-userSelectedYes="$(paragraph "You selected "Yes". Applying changes...")"
-userSelectedNo="$(paragraph "You selected "No". Skipping...")"
-userNoSelection="$(error "You didn't select a valid option. Skipping...")"
+alias scriptTerminated='error "Script terminated..."'
+alias yesQuestion='heading "[1] Yes"'
+alias skipQuestion='heading "[2] No"'
+alias userSelectedYes='paragraph "Applying changes..."'
+alias userSelectedNo='paragraph "Skipping..."'
+alias userNoSelection='error "No valid option provided, retrying..."'
 
 # Colors
 ## "heading" is yellow.
@@ -22,15 +36,15 @@ heading(){
 }
 ## "paragraph" is grey.
 paragraph() {
-	echo -e "\e[90m${1}\e[0m"
+	echo -e "\e[90m${1}\e[0m";
 }
 ## "success" is green.
 success() {
-	echo -e "\e[32m${1}\e[0m"
+	echo -e "\e[32m${1}\e[0m";
 }
 ## "error" is red.
 error() {
-	echo -e "\e[31m${1}\e[0m"
+	echo -e "\e[31m${1}\e[0m";
 }
 
 # Precheck
@@ -41,9 +55,9 @@ preCheck(){
     echo ""
 
     # Check if script was run as root
-    if [ "$EUID" -ne 0 ] then
+    if [ "$EUID" -ne 0 ]; then
         error "You have to run this script with root privileges."
-        ${scriptTerminated}
+        scriptTerminated
         exit 126
     fi
 
@@ -51,18 +65,17 @@ preCheck(){
     if [ -r /etc/os-release ]; then
         success "/etc/os-release found on system."
         paragraph "You are running ${osName} ${osVersion}"
-        echo ""
     else
         error "/etc/os-release not found on system."
-        ${scriptTerminated}
+        scriptTerminated
         exit 2
     fi
 
     # Terminate script if user isn't running a supported distro
-    if [ $osName != "debian", "ubuntu", "rhel", "centos", "cloudlinux", "fedora" ]; then
+    if [ $osName == "debian" ] && [ $osName == "ubuntu" ] && [ $osName == "rhel" ] && [ $osName == "centos" ] && [ $osName == "cloudlinux" ] && [ $osName == "fedora" ]; then
         error "You are running an unsupported distribution."
         paragraph "Check the GitHub page for a list of supported distributions."
-        ${scriptTerminated}
+        scriptTerminated
         exit 126
     fi
 }
@@ -72,12 +85,12 @@ updatePackages(){
     echo ""
     paragraph "Updating and removing unused packages, please wait..."
     echo ""
-    wait 5
-    if [ $osName == "rhel", "centos", "cloudlinux", "fedora" ]; then
+    sleep 3s
+    if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "cloudlinux" ] || [ $osName == "fedora" ]; then
         yum -y upgrade
         yum -y autoremove
         yum -y install curl
-    elif [ $osName == "debian", "ubuntu" ]; then
+    elif [ $osName == "debian" ] || [ $osName == "ubuntu" ]; then
         apt update
         apt -y upgrade
         apt -y autoremove
@@ -92,20 +105,20 @@ blockICMP(){
     echo ""
     heading "Do you want to block ICMP packets?"
     heading "You should keep them enabled [2] if you are using a monitoring system."
-    ${yesQuestion}
-    ${skipQuestion}
+    yesQuestion
+    skipQuestion
     echo ""
 
     # Apply changes
     read selectICMP
     case $selectICMP in
-        1 ) ${userSelectedYes}
+        1 ) userSelectedYes
             /sbin/iptables -t mangle -A PREROUTING -p icmp -j DROP
             (crontab -l ; echo "@reboot /sbin/iptables -t mangle -A PREROUTING -p icmp -j DROP >> /dev/null 2>&1")| crontab -
             ;;
-        2 ) ${userSelectedNo}
+        2 ) userSelectedNo
             ;;
-        * ) ${userNoSelection}
+        * ) userNoSelection
             blockICMP
     esac
 }
@@ -116,23 +129,22 @@ basicIPtable(){
     echo ""
     heading "Do you want to add some iptable rules?"
     heading "The rules have been made by the GitHub user TommyTran732."
-    ${yesQuestion}
-    ${skipQuestion}
+    yesQuestion
+    skipQuestion
     echo ""
 
     # Apply changes
     read selectIptable
     case $selectIptable in
-        1 ) ${userSelectedYes}
+        1 ) userSelectedYes
             curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/linux-basic-iptables.sh | bash
             # Allow connections via the default ssh port (22)
             /sbin/iptables --append INPUT --protocol tcp --sport 22 --dport 22 --jump ACCEPT
             (crontab -l ; echo "@reboot /sbin/iptables --append INPUT --protocol tcp --sport 22 --dport 22 --jump ACCEPT >> /dev/null 2>&1")| crontab -
-            basicIPtable
             ;;
-        2 ) ${userSelectedNo}
+        2 ) userSelectedNo
             ;;
-        * ) ${userNoSelection}
+        * ) userNoSelection
             basicIPtable
     esac
 }
@@ -143,24 +155,24 @@ applyTuned(){
     echo ""
     heading "Do you want to enable a tuned performance profile?"
     heading "This does not work on Debian 9, Ubuntu 16.04, or older."
-    ${yesQuestion}
-    ${skipQuestion}
+    yesQuestion
+    skipQuestion
     echo ""
 
     # Apply changes
     read selectTuned
     case $selectTuned in
-        1 ) ${userSelectedYes}
-            if [ $osName == "rhel", "centos", "cloudlinux", "fedora" ]; then
+        1 ) userSelectedYes
+            if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "cloudlinux" ] || [ $osName == "fedora" ]; then
                 yum -y install tuned
-            elif [ $osName == "debian", "ubuntu" ]; then
+            elif [ $osName == "debian" ] || [ $osName == "ubuntu" ]; then
                 apt -y install tuned
             fi
             tuned-adm profile latency-performance
             ;;
-        2 ) ${userSelectedNo}
+        2 ) userSelectedNo
             ;;
-        * ) ${userNoSelection}
+        * ) userNoSelection
             selectTuned
     esac
 }
@@ -171,17 +183,17 @@ enableFail2Ban(){
     echo ""
     heading "Do you want to set up Fail2Ban?"
     heading "Fail2Ban is used to protect sshd against attacks."
-    ${yesQuestion}
-    ${skipQuestion}
+    yesQuestion
+    skipQuestion
     echo ""
 
     # Apply changes
     read selectFail2Ban
     case $selectFail2Ban in
-        1 ) ${userSelectedYes}
-            if [ $osName == "rhel", "centos", "cloudlinux", "fedora" ]; then
+        1 ) userSelectedYes
+            if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "cloudlinux" ] || [ $osName == "fedora" ]; then
                 yum -y install fail2ban
-            elif [ $osName == "debian", "ubuntu" ]; then
+            elif [ $osName == "debian" ] || [ $osName == "ubuntu" ]; then
                 apt -y install fail2ban
             fi
             systemctl enable fail2ban
@@ -196,9 +208,9 @@ enabled = true
 EOF
             service fail2ban restart
             ;;
-        2 ) ${userSelectedNo}
+        2 ) userSelectedNo
             ;;
-        * ) ${userNoSelection}
+        * ) userNoSelection
             selectFail2Ban
     esac
 }
@@ -208,23 +220,21 @@ disablePasswordAuth(){
     # Question and description
     echo ""
     heading "Do you want to disable ssh password authentication?"
-    ${yesQuestion}
-    ${skipQuestion}
+    yesQuestion
+    skipQuestion
     echo ""
 
     # Apply changes
     read selectPasswordAuth
-    case selectPasswordAuth in
-    1 ) ${userSelectedYes}
-        sed -i 's/#PasswordAuthentication no/PasswordAuthentication no' /etc/ssh/sshd_config
-        sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no' /etc/ssh/sshd_config
-        sed -i 's/PasswordAuthentication yes/PasswordAuthentication no' /etc/ssh/sshd_config
-        systemctl restart ssh
-        ;;
-    2 ) ${userSelectedNo}
-        ;;
-    * ) ${userNoSelection}
-        disablePasswordAuth
+    case $selectPasswordAuth in
+        1 ) userSelectedYes
+            sed -i 's/.*PasswordAuthentication no/PasswordAuthentication no/g' /etc/ssh/sshd_config
+            systemctl restart ssh
+            ;;
+        2 ) userSelectedNo
+            ;;
+        * ) userNoSelection
+            disablePasswordAuth
     esac
 }
 
@@ -233,20 +243,20 @@ whitelistTCPShield(){
     # Question and description
     echo ""
     heading "Do you want to whitelist TCPShield's IPs on your specified ports?"
-    ${yesQuestion}
-    ${skipQuestion}
+    yesQuestion
+    skipQuestion
     echo ""
 
     # Apply changes
     read selectTCPShield
-    case selectTCPShield in
-    1 ) ${userSelectedYes}
-        curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistTCPShield.sh | bash
-        ;;
-    2 ) ${userSelectedNo}
-        ;;
-    * ) ${userNoSelection}
-        selectTCPShield
+    case $selectTCPShield in
+        1 ) userSelectedYes
+            curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistTCPShield.sh | bash
+            ;;
+        2 ) userSelectedNo
+            ;;
+        * ) userNoSelection
+            selectTCPShield
     esac
 }
 
@@ -255,20 +265,20 @@ whitelistWISP(){
     # Question and description
     echo ""
     heading "Do you want to whitelist WISP's (and Pterodactyl) IPs on your specified ports?"
-    ${yesQuestion}
-    ${skipQuestion}
+    yesQuestion
+    skipQuestion
     echo ""
 
     # Apply changes
     read selectWISP
-    case selectWISP in
-    1 ) ${userSelectedYes}
-        curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistWISP.sh | bash
-        ;;
-    2 ) ${userSelectedNo}
-        ;;
-    * ) ${userNoSelection}
-        selectWISP
+    case $selectWISP in
+        1 ) userSelectedYes
+            curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistWISP.sh | bash
+            ;;
+        2 ) userSelectedNo
+            ;;
+        * ) userNoSelection
+            selectWISP
     esac
 }
 
@@ -278,13 +288,14 @@ javapipeKernel(){
     echo ""
     heading "Do you want to apply JavaPipe's Anti-DDoS kernel settings?"
     heading "Read more over at: https://javapipe.com/blog/iptables-ddos-protection/"
-    ${yesQuestion}
-    ${skipQuestion}
+    yesQuestion
+    skipQuestion
+    echo ""
 
     # Apply changes
     read selectJavaPipe
     case $selectJavaPipe in
-        1 ) ${userSelectedYes}
+        1 ) userSelectedYes
             bash -c 'cat > /etc/sysctl.conf' <<-'EOF'
 kernel.printk = 4 4 1 7 
 kernel.panic = 10 
@@ -335,7 +346,6 @@ net.ipv4.udp_rmem_min = 16384
 net.ipv4.tcp_wmem = 4096 87380 33554432 
 net.ipv4.udp_wmem_min = 16384 
 net.ipv4.tcp_max_tw_buckets = 1440000 
-net.ipv4.tcp_tw_recycle = 0 
 net.ipv4.tcp_tw_reuse = 1 
 net.ipv4.tcp_max_orphans = 400000 
 net.ipv4.tcp_window_scaling = 1 
@@ -361,9 +371,9 @@ net.ipv4.conf.all.rp_filter = 1
 EOF
             sysctl -p
             ;;
-        2 ) ${userSelectedNo}
+        2 ) userSelectedNo
             ;;
-        * ) ${userNoSelection}
+        * ) userNoSelection
             selectJavaPipe
     esac
 }
@@ -373,27 +383,27 @@ motd(){
     # Question and description
     echo ""
     heading "Do you want to enable the custom MOTD?"
-    ${userSelectedYes}
-    ${userSelectedNo}
+    yesQuestion
+    skipQuestion
     echo ""
 
     # Apply changes
     read selectMOTD
     case $selectMOTD in
-        1 ) ${userSelectedYes}
+        1 ) userSelectedYes
             echo '
             
 
-            This server is in property of '"${username}"'.
-            Unauthorized access to this machine will be prosecuted by law.
-            Your IP address and coordinates has been logged for security purposes.
+This server is in property of '"${username}"'.
+Unauthorized access to this machine will be prosecuted by law.
+Your IP address and coordinates has been logged for security purposes.
 
 
-            ' | tee /etc/motd > /dev/null 2>&
+            ' | tee /etc/motd >/dev/null 2>&1
             ;;
-        2 ) ${userSelectedNo}
+        2 ) userSelectedNo
             ;;
-        * ) ${userNoSelection}
+        * ) userNoSelection
             selectMOTD
     esac
 }
