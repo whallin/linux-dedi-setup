@@ -38,7 +38,7 @@ preCheck(){
     echo ""
 
     # Check if script was run as root
-    if [ "$EUID" -ne 0 ] then
+    if [ "$EUID" -ne 0 ]; then
         error "You have to run this script with root privileges."
         scriptTerminated
         exit 126
