@@ -89,7 +89,7 @@ if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "fedora" ]; 
     # Download the list of WISP IPs (IPv4)
     wget https://raw.githubusercontent.com/whallin/linux-setup/master/wisp-v4
     # Create the firewall rules
-    for ips in `cat v4`;
+    for ips in `cat wisp-v4`;
     do
         for port in "${ports[@]}";
         do
@@ -112,7 +112,7 @@ elif [ $osName == "debian" ] || [ $osName == "ubuntu" ]; then
     # Download the list of WISP IPs (IPv4)
     wget https://raw.githubusercontent.com/whallin/linux-setup/master/wisp-v4
     # Create the firewall rules
-    for ips in `cat v4`;
+    for ips in `cat wisp-v4`;
     do
         for port in "${ports[@]}";
         do
