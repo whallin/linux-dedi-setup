@@ -241,7 +241,7 @@ whitelistTCPShield(){
     read selectTCPShield
     case selectTCPShield in
     1 ) ${userSelectedYes}
-        curl -sSL  https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistTCPShield.sh | bash
+        curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistTCPShield.sh | bash
         ;;
     2 ) ${userSelectedNo}
         ;;
@@ -263,7 +263,7 @@ whitelistWISP(){
     read selectWISP
     case selectWISP in
     1 ) ${userSelectedYes}
-        curl -sSL  https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistWISP.sh | bash
+        curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistWISP.sh | bash
         ;;
     2 ) ${userSelectedNo}
         ;;
