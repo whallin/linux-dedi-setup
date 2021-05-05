@@ -91,12 +91,14 @@ if [ $osName == "rhel", "centos", "fedora" ]; then
         for port in "${ports[@]}";
         do
             firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address='"$ips"' port port='"$port"' protocol="tcp" accept'
-            # !! The line below doesn't work yet.
-            # !! Find the IP of the interface "wisp0" first.
-            # !!
-            # !! "Configuring Complex Firewall Rules with the "Rich Language" Syntax"
-            # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/configuring_complex_firewall_rules_with_the_rich-language_syntax
-            #firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address='"$ips"' port port='"$port"' protocol="tcp" accept'
+            # 
+            # Comment from <me@williamhallin.com>:
+            # I can't actually seem to find a way to replace the "source address"
+            # property with something that would whitelist a specific local interface.
+            # If someone is more familiar with firewalld, feel free to PR changes to the
+            # command below so we can whitelist a full local interface to do connects.
+            # 
+            # firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address='"$ips"' port port='"$port"' protocol="tcp" accept'
         done
     done
     firewall-cmd --reload
