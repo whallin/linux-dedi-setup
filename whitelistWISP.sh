@@ -117,7 +117,7 @@ elif [ $osName == "debian" ] || [ $osName == "ubuntu" ]; then
         for port in "${ports[@]}";
         do
             ufw allow from $ips to any proto tcp port $port
-            ufw allow from wisp0 to any proto tcp port $port
+            ufw allow in wisp0 to any proto tcp port $port
         done
     done
     yes | ufw enable
