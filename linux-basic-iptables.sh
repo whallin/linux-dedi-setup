@@ -1,13 +1,13 @@
 #!/bin/bash
 
-/sbin/iptables -t filter -F
-(crontab -l ; echo "@reboot /sbin/iptables -t filter -F")| crontab -
-/sbin/iptables -t filter -X
-(crontab -l ; echo "@reboot /sbin/iptables -t filter -X")| crontab -
-/sbin/iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-(crontab -l ; echo "@reboot /sbin/iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT")| crontab - 
-/sbin/iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-(crontab -l ; echo "@reboot /sbin/iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT")| crontab -
+#/sbin/iptables -t filter -F
+#(crontab -l ; echo "@reboot /sbin/iptables -t filter -F")| crontab -
+#/sbin/iptables -t filter -X
+#(crontab -l ; echo "@reboot /sbin/iptables -t filter -X")| crontab -
+#/sbin/iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+#(crontab -l ; echo "@reboot /sbin/iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT")| crontab - 
+#/sbin/iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+#(crontab -l ; echo "@reboot /sbin/iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT")| crontab -
 #/sbin/iptables -t filter -A INPUT -i lo -j ACCEPT 
 #(crontab -l ; echo "@reboot /sbin/iptables -t filter -A INPUT -i lo -j ACCEPT ")| crontab -
 #/sbin/iptables -t filter -A OUTPUT -o lo -j ACCEPT 
