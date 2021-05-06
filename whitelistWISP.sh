@@ -75,7 +75,7 @@ getPorts(){
 
 # Ask the user for the desired ports
 paragraph "Enter the list of ports you want whitelisted. Seperate each by a space."
-paragraph "Keep in mind to add the ports (8080, 2022) used to talk to the panel."
+paragraph "Port 443, 8080, 2022 are used by WISP by default."
 paragraph "If you wish to whitelist ports 25565-25570, enter:"
 paragraph "25565 25566 25567 25568 25569 25570"
 
