@@ -11,7 +11,7 @@
 
 <!-- ABOUT -->
 ## 👨‍💻 linux-dedi-setup
-linux-dedi-setup was created and developed by [@msleeper](https://github.com/tommytran732), but has now turned into a more inactive repository that sadly isn't being maintained. Hence, why this clone exists. We're here to make sure development of this incredibly useful shell remains active and fixes are made to existing issues. 
+linux-dedi-setup was created and developed by [@tommytran732](https://github.com/tommytran732), but has now turned into a more inactive repository that sadly isn't being maintained. Hence, why this clone exists. We're here to make sure development of this incredibly useful shell remains active and fixes are made to existing issues. 
 
 linux-dedi-setup lets you easily set up and configure your Linux machine in barely any time.
 
