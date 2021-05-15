@@ -2,7 +2,7 @@
 
 # Placeholders
 ## Only edit the placeholders in case you know what you're doing.
-version=1.0.2
+version=1.0.3
 username="YOUR NAME"
 osName="$(. /etc/os-release && echo "$ID")"
 osVersion="$(. /etc/os-release && echo "$VERSION_ID")"
@@ -51,7 +51,7 @@ error() {
 preCheck(){
     heading "Linux Auto-setup v${version}"
     heading "Developed by Thien Tran <contact@thientran.io>"
-    heading "Modified by William Hallin <me@williamhallin.com>"
+    heading "Forked by William Hallin <me@williamhallin.com>"
     echo ""
 
     # Check if script was run as root
@@ -238,50 +238,6 @@ disablePasswordAuth(){
     esac
 }
 
-# Only allow access from TCPShield on specific ports, yes or no?
-whitelistTCPShield(){
-    # Question and description
-    echo ""
-    heading "Do you want to whitelist TCPShield's IPs on your specified ports?"
-    yesQuestion
-    skipQuestion
-    echo ""
-
-    # Apply changes
-    read selectTCPShield
-    case $selectTCPShield in
-        1 ) userSelectedYes
-            bash <(curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistTCPShield.sh)
-            ;;
-        2 ) userSelectedNo
-            ;;
-        * ) userNoSelection
-            selectTCPShield
-    esac
-}
-
-# Only allow access from WISP on specific ports, yes or no?
-whitelistWISP(){
-    # Question and description
-    echo ""
-    heading "Do you want to whitelist WISP's (and Pterodactyl) IPs on your specified ports?"
-    yesQuestion
-    skipQuestion
-    echo ""
-
-    # Apply changes
-    read selectWISP
-    case $selectWISP in
-        1 ) userSelectedYes
-            bash <(curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/whitelistWISP.sh)
-            ;;
-        2 ) userSelectedNo
-            ;;
-        * ) userNoSelection
-            selectWISP
-    esac
-}
-
 # Enable JavaPipe Anti-DDoS kernel settings, yes or no?
 javapipeKernel(){
     # Question and description
@@ -416,8 +372,6 @@ basicIPtable
 applyTuned
 enableFail2Ban
 disablePasswordAuth
-whitelistTCPShield
-whitelistWISP
 javapipeKernel
 motd
 
