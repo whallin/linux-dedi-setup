@@ -137,7 +137,7 @@ basicIPtable(){
     read selectIptable
     case $selectIptable in
         1 ) userSelectedYes
-            curl -sSL https://raw.githubusercontent.com/whallin/linux-setup/master/linux-basic-iptables.sh | bash
+            curl -sSL https://raw.githubusercontent.com/whallin/linux-dedi-setup/master/linux-basic-iptables.sh | bash
             # Allow connections via the default ssh port (22)
             #/sbin/iptables --append INPUT --protocol tcp --sport 22 --dport 22 --jump ACCEPT
             #(crontab -l ; echo "@reboot /sbin/iptables --append INPUT --protocol tcp --sport 22 --dport 22 --jump ACCEPT >> /dev/null 2>&1")| crontab -
