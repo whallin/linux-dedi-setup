@@ -72,7 +72,7 @@ preCheck(){
     fi
 
     # Terminate script if user isn't running a supported distro
-    if [ $osName == "debian" ] && [ $osName == "ubuntu" ] && [ $osName == "rhel" ] && [ $osName == "centos" ] && [ $osName == "cloudlinux" ] && [ $osName == "fedora" ]; then
+    if [ $osName == "debian" ] && [ $osName == "ubuntu" ] && [ $osName == "rhel" ] && [ $osName == "centos" ] && [ $osName == "cloudlinux" ] && [ $osName == "fedora" ] && [ $osName == "rocky" ]; then
         error "You are running an unsupported distribution."
         paragraph "Check the GitHub page for a list of supported distributions."
         scriptTerminated
@@ -86,7 +86,7 @@ updatePackages(){
     paragraph "Updating and removing unused packages, please wait..."
     echo ""
     sleep 3s
-    if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "cloudlinux" ] || [ $osName == "fedora" ]; then
+    if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "cloudlinux" ] || [ $osName == "fedora" ] || [ $osName == "rocky" ]; then
         yum -y upgrade
         yum -y autoremove
         yum -y install curl
@@ -163,7 +163,7 @@ applyTuned(){
     read selectTuned
     case $selectTuned in
         1 ) userSelectedYes
-            if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "cloudlinux" ] || [ $osName == "fedora" ]; then
+            if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "cloudlinux" ] || [ $osName == "fedora" ] || [ $osName == "rocky" ]; then
                 yum -y install tuned
             elif [ $osName == "debian" ] || [ $osName == "ubuntu" ]; then
                 apt -y install tuned
@@ -191,7 +191,7 @@ enableFail2Ban(){
     read selectFail2Ban
     case $selectFail2Ban in
         1 ) userSelectedYes
-            if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "cloudlinux" ] || [ $osName == "fedora" ]; then
+            if [ $osName == "rhel" ] || [ $osName == "centos" ] || [ $osName == "cloudlinux" ] || [ $osName == "fedora" ] || [ $osName == "rocky" ]; then
                 yum -y install fail2ban
             elif [ $osName == "debian" ] || [ $osName == "ubuntu" ]; then
                 apt -y install fail2ban
@@ -348,12 +348,10 @@ motd(){
     case $selectMOTD in
         1 ) userSelectedYes
             echo '
-            
 
 This server is in property of '"${username}"'.
 Unauthorized access to this machine will be prosecuted by law.
 Your IP address and coordinates has been logged for security purposes.
-
 
             ' | tee /etc/motd >/dev/null 2>&1
             ;;
