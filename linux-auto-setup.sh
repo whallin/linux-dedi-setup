@@ -2,7 +2,7 @@
 
 # Placeholders
 ## Only edit the placeholders in case you know what you're doing.
-version=1.0.3
+version=1.0.4
 username="YOUR NAME"
 osName="$(. /etc/os-release && echo "$ID")"
 osVersion="$(. /etc/os-release && echo "$VERSION_ID")"
