@@ -1,6 +1,3 @@
-<!-- HEADER -->
-<a href="https://williamhallin.com"><img src="https://raw.githubusercontent.com/whallin/whallin/master/img_header.png" alt="A banner showing the William Hallin logo."></a>
-
 <!-- SHIELDS -->
 <p align=center>
   <a href="https://github.com/whallin/linux-dedi-setup/graphs/contributors">
@@ -21,6 +18,6 @@ linux-dedi-setup lets you easily set up and configure your Linux machine in bare
 
 <!-- LICENSE -->
 ## ⚖️ License
-Copyright © 2021 [William Hallin Multimedia &lt;me@williamhallin.com&gt; (https://www.williamhallin.com)](https://www.williamhallin.com)
+Copyright © 2021 [William Hallin Multimedia &lt;hey@whallin.me&gt; (https://whallin.me)](https://whallin.me)
 
 whallin/linux-dedi-setup is licensed under the ``GPL-3.0`` license. Read more about its meaning and effects [here](https://github.com/whallin/linux-dedi-setup/blob/main/LICENSE).
